@@ -20,7 +20,7 @@ public class BbsDAO {
 			String dbPassword = "907914";
 			
 			// 드라이버 로딩 : mysql 드라이버 로딩
-			Class.forName("com.mysql.jdbc.Driver");	
+			Class.forName("com.mysql.cj.jdbc.Driver");	
 			// 드라이버들이 읽히기만 하면 자동 객체가 생성되고 DriverManager에 등록된다.
 			
 			//DriverManager.getConnection(연결문자열, DB_ID, DB_PW) 으로 Connection 객체를 생성
@@ -120,4 +120,25 @@ public class BbsDAO {
 		return false;
 	}
 	
+	public Bbs getBbs(int bbsID) {
+		String sql = "select * from bbs where bbsID = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bbsID);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				Bbs bbs = new Bbs();
+				bbs.setBbsID(rs.getInt(1));
+				bbs.setBbsTitle(rs.getString(2));
+				bbs.setUserID(rs.getString(3));
+				bbs.setBbsDate(rs.getString(4));
+				bbs.setBbsContent(rs.getString(5));
+				bbs.setBbsAvailable(rs.getInt(6));
+				return bbs;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
